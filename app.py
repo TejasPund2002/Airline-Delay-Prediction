@@ -111,6 +111,20 @@ st.markdown("""
         color:#b0c4de;
         font-size: 0.9rem; /* Adjusted font size */
     }
+    .design-box {
+        background: linear-gradient(135deg, #1f4068, #16314f);
+        padding: 15px; /* Smaller padding */
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        margin-top: 2rem;
+    }
+    .design-box h1 {
+        font-size: 1.8rem; /* Smaller font size */
+        margin-bottom: 10px;
+    }
+    .design-box p {
+        font-size: 0.9rem; /* Smaller font size */
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -258,40 +272,40 @@ if submitted:
             st.plotly_chart(fig_pie, use_container_width=True)
 
 
-# --- Feature Insights Section ---
-st.markdown("""
-<div class='feature-box'>
-    <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>📊 Feature Insights</h1>
-    <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
-</div>
-""", unsafe_allow_html=True)
+        # --- Feature Insights Section ---
+        st.markdown("""
+        <div class='feature-box'>
+            <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>📊 Feature Insights</h1>
+            <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-# Example placeholders for charts / metrics
-col1, col2 = st.columns(2)
+        insights_col1, insights_col2 = st.columns(2)
 
-with col1:
-    st.markdown("""
-    <div class='feature-item'>
-        <h3>Carrier Impact</h3>
-        <p>Shows average delays by each airline carrier.</p>
-    </div>
-    """, unsafe_allow_html=True)
+        with insights_col1:
+            # Bar chart for carrier impact
+            carriers = ["Delta Air Lines", "United Airlines", "Southwest Airlines", "American Airlines", "JetBlue Airways"]
+            delays = [12, 20, 10, 25, 15] # Hypothetical average delays
+            fig_carrier = px.bar(x=carriers, y=delays, title="Hypothetical Average Delays by Carrier")
+            fig_carrier.update_layout(xaxis_title="Carrier", yaxis_title="Average Delay (minutes)")
+            st.plotly_chart(fig_carrier, use_container_width=True)
 
-with col2:
-    st.markdown("""
-    <div class='feature-item'>
-        <h3>Airport Impact</h3>
-        <p>Shows how origin and destination airports influence flight delays.</p>
-    </div>
-    """, unsafe_allow_html=True)
+        with insights_col2:
+            # Line chart for daily delay trend
+            days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            trend = [15, 12, 10, 18, 25, 22, 19] # Hypothetical trend
+            fig_daily = px.line(x=days, y=trend, title="Hypothetical Daily Delay Trend")
+            fig_daily.update_layout(xaxis_title="Day of Week", yaxis_title="Average Delay (minutes)")
+            fig_daily.update_traces(mode='lines+markers', line=dict(color='#00ffcc', width=4))
+            st.plotly_chart(fig_daily, use_container_width=True)
+
 
 # --- Design Section ---
 st.markdown("""
-<div class='feature-box' style='background: linear-gradient(135deg, #1f4068, #16314f);'>
+<div class='design-box'>
     <h1 style='color:#75e6da; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>🎨 Design and Credits</h1>
-    <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>This application was designed using a dark, modern aesthetic with a focus on usability and a pleasant visual experience.</p>
-    <div style='text-align:center; margin-top:20px;'>
-        <p style='color:#b0c4de;'><strong>Theme:</strong> Dark Ocean Blue Gradient</p>
+    <p style='color:#d0d0d0; text-align:center; font-size:14px;'>This app uses a clean, modern design. The theme is based on the Dark Ocean Blue gradient.</p>
+    <div style='text-align:center; margin-top:10px;'>
         <p style='color:#b0c4de;'><strong>Libraries:</strong> Streamlit, Scikit-learn, Pandas, Joblib, Plotly</p>
         <p style='color:#b0c4de;'><strong>Icons:</strong> Emojis ✈️ 🔮 ⏱️</p>
     </div>

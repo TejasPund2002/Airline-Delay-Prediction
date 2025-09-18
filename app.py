@@ -109,7 +109,7 @@ rf_model, scaler, feature_columns = load_resources()
 
 # --- Input + Prediction Section ---
 st.markdown('<div class="form-box">', unsafe_allow_html=True)
-st.markdown('<h1 class="form-title">✈️ Flight Delay Predictor</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="form-title">Flight Delay Predictor</h1>', unsafe_allow_html=True)
 st.markdown('<p class="form-subtitle">Enter flight details to predict potential delays based on a machine learning model.</p>', unsafe_allow_html=True)
 
 # Day mapping (UI shows names, model gets numbers)

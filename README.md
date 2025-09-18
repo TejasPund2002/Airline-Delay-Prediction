@@ -1,35 +1,45 @@
-# 🎓 Student Performance Prediction System
+# Airline Delay Prediction
 
-This project predicts student performance using ML models (XGBoost, RandomForest, LightGBM) and provides study guidance.
+## Overview
+The **Airline Delay Prediction** project is a machine learning application that predicts flight arrival delays based on multiple factors such as weather, traffic, airport congestion, and flight schedules. The project provides both **regression (delay in minutes)** and **classification (delay class)** predictions through a user-friendly **Streamlit web application**.
 
----
-
-## 🚀 Features
-- **Single Record Prediction** – Enter study details → get predicted score, grade & pass/fail.
-- **Batch Prediction** – Upload CSV & download results.
-- **Visualizations** – Predicted vs Actual, Residuals, Feature Importance, Dynamic graphs, Gauge meter.
-- **Guidance Planner** – Weekly study/skill plan auto-generated.
-- **Model Comparison** – RF vs XGBoost vs LightGBM (CV scores).
-- **User Accounts** – Track history of predictions & progress.
-- **Reports Export** – Download results as PDF, CSV, or ICS calendar.
-- **Language Support** – Marathi & English UI toggle.
-- **Admin Tools** – Auto retrain when new labeled data uploaded.
+This project is designed for airlines, passengers, and aviation enthusiasts to **analyze and anticipate flight delays**, enabling better planning and decision-making.
 
 ---
 
-## 🛠 Tech Stack
-- **Backend**: Python, scikit-learn, XGBoost, LightGBM
-- **Frontend**: Streamlit, Plotly, Matplotlib, Seaborn
-- **Other**: Joblib (model saving), FPDF (report export), ICS (calendar)
+## Features
+
+- **Interactive Web App:** Built with Streamlit for quick predictions and visualization.
+- **Regression Prediction:** Predicts the estimated flight delay in minutes.
+- **Delay Classification:** Categorizes delays into classes such as:
+  - On-time
+  - Short Delay
+  - Long Delay
+- **Dynamic Input Handling:** Users can enter flight details like carrier, origin/destination airport, weather, traffic level, and time of flight.
+- **Data Exploration:** Includes basic EDA and visualization for insights into factors affecting delays.
+- **Scalable Machine Learning Model:** Random Forest Regressor trained on real-world flight data.
 
 ---
 
-## 📂 Project Structure
-student-performance/
-│── artifacts/ # Saved models
-│── data/ # Sample datasets
-│── app.py # Streamlit app
-│── train_model.py # Training pipeline
-│── requirements.txt # Dependencies
-│── README.md # Documentation
+## Dataset
+- **Dataset:** `flight_delay_dataset.csv`
+- **Source:** Collected from historical flight data (internal dataset for demonstration).
+- **Features Include:**
+  - `carrier_name`
+  - `airport_origin`
+  - `airport_dest`
+  - `flight_date`
+  - `hour`, `day_of_week`, `month`
+  - `weather_condition`
+  - `traffic_level`
+  - `airport_congestion_index`
+  - `arr_delay` (target variable)
 
+---
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/TejasPund2002/Airline-Delay-Prediction.git
+cd Airline-Delay-Prediction

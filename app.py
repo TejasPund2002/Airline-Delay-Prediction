@@ -21,19 +21,27 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     .form-box {
-        background-color: #ffffff;
+        background: linear-gradient(45deg, #1b263b, #0d1b2a);
+        color: #e0eaff;
         padding: 30px;
         border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e0e0e0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 2px solid #3498db;
         margin-bottom: 2rem;
     }
     .form-title {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #e0eaff;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .form-subtitle {
+        font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #b0c4de;
     }
     .stButton > button {
         background-color: #3498db;
@@ -42,11 +50,13 @@ st.markdown("""
         padding: 0.75rem 2rem;
         border-radius: 10px;
         border: none;
-        transition: transform 0.2s, background-color 0.2s;
+        transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
     }
     .stButton > button:hover {
         background-color: #2980b9;
         transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
     }
     .result-box {
         margin-top: 20px;
@@ -69,6 +79,10 @@ st.markdown("""
     }
     .status-highlight {
         color: #ffd700;
+        font-weight: bold;
+    }
+    .stAlert {
+        border-radius: 10px;
         font-weight: bold;
     }
 </style>
@@ -96,6 +110,7 @@ rf_model, scaler, feature_columns = load_resources()
 # --- Input + Prediction Section ---
 st.markdown('<div class="form-box">', unsafe_allow_html=True)
 st.markdown('<h1 class="form-title">✈️ Flight Delay Predictor</h1>', unsafe_allow_html=True)
+st.markdown('<p class="form-subtitle">Enter flight details to predict potential delays based on a machine learning model.</p>', unsafe_allow_html=True)
 
 # Day mapping (UI shows names, model gets numbers)
 days_map = {
@@ -147,36 +162,40 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 # --- On Submit: Process + Predict ---
 if submitted:
-    # Build input DataFrame
-    input_data = pd.DataFrame({
-        "carrier_name": [carrier_name],
-        "airport_origin": [airport_origin],
-        "airport_dest": [airport_dest],
-        "weather_condition": [weather_condition],
-        "traffic_level": [traffic_level],
-        "day_of_week": [days_map[day_of_week]],  # mapped number
-        "month": [month],
-        "hour": [hour],
-        "distance": [distance],
-        "airport_congestion_index": [congestion_index]
-    })
+    # Check if origin and destination airports are the same
+    if airport_origin == airport_dest:
+        st.error("The origin and destination airports cannot be the same. Please select different airports to proceed.")
+    else:
+        # Build input DataFrame
+        input_data = pd.DataFrame({
+            "carrier_name": [carrier_name],
+            "airport_origin": [airport_origin],
+            "airport_dest": [airport_dest],
+            "weather_condition": [weather_condition],
+            "traffic_level": [traffic_level],
+            "day_of_week": [days_map[day_of_week]],  # mapped number
+            "month": [month],
+            "hour": [hour],
+            "distance": [distance],
+            "airport_congestion_index": [congestion_index]
+        })
 
-    # Encode + align
-    input_encoded = pd.get_dummies(input_data)
-    input_encoded = input_encoded.reindex(columns=feature_columns, fill_value=0)
+        # Encode + align
+        input_encoded = pd.get_dummies(input_data)
+        input_encoded = input_encoded.reindex(columns=feature_columns, fill_value=0)
 
-    # Scale
-    input_scaled = scaler.transform(input_encoded)
+        # Scale
+        input_scaled = scaler.transform(input_encoded)
 
-    # Predict
-    predicted_delay = rf_model.predict(input_scaled)[0]
-    predicted_class = "On-Time ✈️" if predicted_delay <= 15 else "Delayed ⏱️"
+        # Predict
+        predicted_delay = rf_model.predict(input_scaled)[0]
+        predicted_class = "On-Time ✈️" if predicted_delay <= 15 else "Delayed ⏱️"
 
-    # --- Show Results ---
-    st.markdown(f"""
-        <div class="result-box">
-            <h2>🔮 Prediction Results</h2>
-            <h3>Predicted Arrival Delay: <span class="highlight">{round(predicted_delay, 2)} minutes</span></h3>
-            <h3>Status: <span class="status-highlight">{predicted_class}</span></h3>
-        </div>
-    """, unsafe_allow_html=True)
+        # --- Show Results ---
+        st.markdown(f"""
+            <div class="result-box">
+                <h2>🔮 Prediction Results</h2>
+                <h3>Predicted Arrival Delay: <span class="highlight">{round(predicted_delay, 2)} minutes</span></h3>
+                <h3>Status: <span class="status-highlight">{predicted_class}</span></h3>
+            </div>
+        """, unsafe_allow_html=True)

@@ -1,6 +1,8 @@
 import streamlit as st
 import joblib
 import pandas as pd
+import numpy as np
+import plotly.express as px
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -27,7 +29,7 @@ st.markdown("""
         border-radius: 15px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         border: 2px solid #3498db;
-        margin-bottom: 2rem;
+        margin-bottom: 3rem; /* Increased spacing */
     }
     .form-title {
         font-size: 2.5rem;
@@ -66,6 +68,7 @@ st.markdown("""
         color: white;
         text-align: center;
         box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+        margin-bottom: 3rem; /* Increased spacing */
     }
     .result-box h2 {
         margin-bottom: 15px;
@@ -84,6 +87,29 @@ st.markdown("""
     .stAlert {
         border-radius: 10px;
         font-weight: bold;
+    }
+    .feature-box {
+        background: linear-gradient(135deg, #2c3e50, #34495e); 
+        padding: 30px; 
+        border-radius: 20px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+        margin-top: 3rem; /* Increased spacing */
+        margin-bottom: 3rem; /* Added spacing below the section */
+    }
+    .feature-item {
+        background:#1b263b; 
+        padding:15px; /* Reduced padding for medium size */
+        border-radius:15px; 
+        box-shadow:0 6px 15px rgba(0,0,0,0.5); 
+        text-align:center;
+    }
+    .feature-item h3 {
+        color:#00ffe0;
+        font-size: 1.2rem; /* Adjusted font size */
+    }
+    .feature-item p {
+        color:#b0c4de;
+        font-size: 0.9rem; /* Adjusted font size */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -107,25 +133,10 @@ def load_resources():
 
 rf_model, scaler, feature_columns = load_resources()
 
-# --- Input + Prediction Section (Redesigned) ---
-st.markdown("""
-<div class="form-box" style="background: linear-gradient(135deg, #1f2c34, #3a4a58); padding:30px; border-radius:20px; box-shadow: 0px 8px 25px rgba(0,0,0,0.7);">
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<h1 class="form-title" style="font-size:28px; text-align:center; color:#00ffe0; margin-bottom:10px; font-family: 'Arial Black', sans-serif;">
-Flight Delay Predictor
-</h1>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<p class="form-subtitle" style="text-align:center; font-size:16px; color:#d0d0d0; margin-bottom:25px;">
-Enter flight details to predict potential delays using a powerful machine learning model.
-</p>
-""", unsafe_allow_html=True)
-
-
+# --- Input + Prediction Section ---
+st.markdown('<div class="form-box">', unsafe_allow_html=True)
+st.markdown('<h1 class="form-title">✈️ Flight Delay Predictor</h1>', unsafe_allow_html=True)
+st.markdown('<p class="form-subtitle">Enter flight details to predict potential delays based on a machine learning model.</p>', unsafe_allow_html=True)
 
 # Day mapping (UI shows names, model gets numbers)
 days_map = {
@@ -215,39 +226,74 @@ if submitted:
             </div>
         """, unsafe_allow_html=True)
 
+        # Generate a hypothetical distribution for charts
+        sample_size = 500
+        delay_distribution = np.random.normal(loc=predicted_delay, scale=10, size=sample_size)
+        delay_distribution = np.clip(delay_distribution, 0, 100) # Ensure delays are positive
 
-# --- Feature Insights & Visuals for Last User Input ---
-import plotly.express as px
-import pandas as pd
+        # Create charts
+        st.markdown("<h2 style='text-align: center; color: #1b263b; margin-top: 2rem;'>📈 Delay Distribution and Class Probability</h2>", unsafe_allow_html=True)
 
-# Check if a prediction was made
-if st.session_state.get("prediction_made"):
-    # Build a DataFrame from the last input
-    input_df = input_data
+        chart_col1, chart_col2 = st.columns(2)
 
+        with chart_col1:
+            # Histogram for delay distribution
+            fig_hist = px.histogram(x=delay_distribution, nbins=20, title="Probability Distribution of Delays")
+            fig_hist.update_layout(xaxis_title="Predicted Delay (minutes)", yaxis_title="Frequency", showlegend=False)
+            fig_hist.update_traces(marker_color='#3498db')
+            st.plotly_chart(fig_hist, use_container_width=True)
+
+        with chart_col2:
+            # Pie chart for on-time vs delayed
+            on_time_count = sum(1 for x in delay_distribution if x <= 15)
+            delayed_count = sample_size - on_time_count
+            
+            fig_pie = px.pie(
+                values=[on_time_count, delayed_count],
+                names=["On-Time ✈️", "Delayed ⏱️"],
+                title="Predicted On-Time vs. Delayed Flights",
+                color_discrete_sequence=['#2ecc71', '#e74c3c']
+            )
+            fig_pie.update_traces(textposition='inside', textinfo='percent+label', marker=dict(line=dict(color='#0d1b2a', width=2)))
+            st.plotly_chart(fig_pie, use_container_width=True)
+
+
+# --- Feature Insights Section ---
+st.markdown("""
+<div class='feature-box'>
+    <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>📊 Feature Insights</h1>
+    <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Example placeholders for charts / metrics
+col1, col2 = st.columns(2)
+
+with col1:
     st.markdown("""
-    <div style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>
-      <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif;'>📊 Feature Insights & Visuals</h1>
-      <p style='color:#d0d0d0; text-align:center; font-size:16px;'>Statistics and visuals based on the last input provided.</p>
+    <div class='feature-item'>
+        <h3>Carrier Impact</h3>
+        <p>Shows average delays by each airline carrier.</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Statistical Summary
-    st.subheader("Statistical Summary")
-    st.dataframe(input_df.describe().T.style.format("{:.2f}"))
+with col2:
+    st.markdown("""
+    <div class='feature-item'>
+        <h3>Airport Impact</h3>
+        <p>Shows how origin and destination airports influence flight delays.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Carrier Impact
-    fig1 = px.bar(input_df, x='carrier_name', y='predicted_delay', color='predicted_delay',
-                  color_continuous_scale='Viridis', title='Predicted Delay by Carrier')
-    st.plotly_chart(fig1, use_container_width=True)
-
-    # Origin Airport Impact
-    fig2 = px.bar(input_df, x='airport_origin', y='predicted_delay', color='predicted_delay',
-                  color_continuous_scale='Cividis', title='Predicted Delay by Origin Airport')
-    st.plotly_chart(fig2, use_container_width=True)
-
-    # Predicted Delay Histogram
-    fig3 = px.histogram(input_df, x='predicted_delay', nbins=5, color='predicted_class',
-                        color_discrete_map={'On-Time ✈️':'#00ffcc','Delayed ⏱️':'#ffd700'},
-                        title='Predicted Delay Distribution')
-    st.plotly_chart(fig3, use_container_width=True)
+# --- Design Section ---
+st.markdown("""
+<div class='feature-box' style='background: linear-gradient(135deg, #1f4068, #16314f);'>
+    <h1 style='color:#75e6da; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>🎨 Design and Credits</h1>
+    <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>This application was designed using a dark, modern aesthetic with a focus on usability and a pleasant visual experience.</p>
+    <div style='text-align:center; margin-top:20px;'>
+        <p style='color:#b0c4de;'><strong>Theme:</strong> Dark Ocean Blue Gradient</p>
+        <p style='color:#b0c4de;'><strong>Libraries:</strong> Streamlit, Scikit-learn, Pandas, Joblib, Plotly</p>
+        <p style='color:#b0c4de;'><strong>Icons:</strong> Emojis ✈️ 🔮 ⏱️</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)

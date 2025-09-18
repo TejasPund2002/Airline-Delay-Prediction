@@ -216,41 +216,18 @@ if submitted:
         """, unsafe_allow_html=True)
 
 
-# --- Feature Insights & Visuals Based on User Input ---
+# --- Feature Insights & Visuals Section (Standalone, Ready to Append) ---
 import plotly.express as px
+import pandas as pd
 
-# Initialize session state to store multiple inputs for visualization
-if 'user_inputs' not in st.session_state:
-    st.session_state['user_inputs'] = pd.DataFrame(columns=[
-        'carrier_name','airport_origin','airport_dest','weather_condition','traffic_level',
-        'day_of_week','month','hour','distance','airport_congestion_index','predicted_delay','predicted_class'
-    ])
+# Ensure session_state for storing multiple inputs exists
+if 'user_inputs' in st.session_state and not st.session_state['user_inputs'].empty:
+    user_df = st.session_state['user_inputs']
 
-# Append current input if prediction was made
-if st.session_state.get('prediction_made'):
-    new_row = pd.DataFrame({
-        'carrier_name': [carrier_name],
-        'airport_origin': [airport_origin],
-        'airport_dest': [airport_dest],
-        'weather_condition': [weather_condition],
-        'traffic_level': [traffic_level],
-        'day_of_week': [days_map[day_of_week]],
-        'month': [month],
-        'hour': [hour],
-        'distance': [distance],
-        'airport_congestion_index': [congestion_index],
-        'predicted_delay': [round(predicted_delay, 2)],
-        'predicted_class': [predicted_class]
-    })
-    st.session_state['user_inputs'] = pd.concat([st.session_state['user_inputs'], new_row], ignore_index=True)
-
-user_df = st.session_state['user_inputs']
-
-if not user_df.empty:
     st.markdown("""
-    <div style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>
-        <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif;'>📊 Feature Insights & Visuals</h1>
-        <p style='color:#d0d0d0; text-align:center;'>Statistics and visualizations generated dynamically from the inputs you have provided.</p>
+    <div style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 40px;'>
+      <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif;'>📊 Feature Insights & Visuals</h1>
+      <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:30px;'>Statistics and visualizations generated dynamically from the inputs you have provided.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -263,30 +240,15 @@ if not user_df.empty:
     st.dataframe(user_df.describe().T.style.format('{:.2f}'))
 
     # --- Carrier Impact ---
-    st.markdown("""
-    <div style='margin-top:25px;'>
-        <h3 style='color:#00ffe0; text-align:center;'>Average Predicted Delay by Carrier</h3>
-    </div>
-    """, unsafe_allow_html=True)
     carrier_chart = user_df.groupby('carrier_name')['predicted_delay'].mean().reset_index()
-    fig1 = px.bar(carrier_chart, x='carrier_name', y='predicted_delay', color='predicted_delay', color_continuous_scale='Viridis', title='Carrier Delay Impact')
+    fig1 = px.bar(carrier_chart, x='carrier_name', y='predicted_delay', color='predicted_delay', color_continuous_scale='Viridis', title='Average Predicted Delay by Carrier')
     st.plotly_chart(fig1, use_container_width=True)
 
-    # --- Airport Origin Impact ---
-    st.markdown("""
-    <div style='margin-top:25px;'>
-        <h3 style='color:#00ffe0; text-align:center;'>Average Predicted Delay by Origin Airport</h3>
-    </div>
-    """, unsafe_allow_html=True)
+    # --- Origin Airport Impact ---
     origin_chart = user_df.groupby('airport_origin')['predicted_delay'].mean().reset_index()
-    fig2 = px.bar(origin_chart, x='airport_origin', y='predicted_delay', color='predicted_delay', color_continuous_scale='Cividis', title='Origin Airport Delay Impact')
+    fig2 = px.bar(origin_chart, x='airport_origin', y='predicted_delay', color='predicted_delay', color_continuous_scale='Cividis', title='Average Predicted Delay by Origin Airport')
     st.plotly_chart(fig2, use_container_width=True)
 
-    # --- Delay Distribution Histogram ---
-    st.markdown("""
-    <div style='margin-top:25px;'>
-        <h3 style='color:#00ffe0; text-align:center;'>Predicted Delay Distribution</h3>
-    </div>
-    """, unsafe_allow_html=True)
+    # --- Predicted Delay Distribution ---
     fig3 = px.histogram(user_df, x='predicted_delay', nbins=20, color='predicted_class', title='Predicted Delay Distribution', color_discrete_map={'On-Time ✈️':'#00ffcc','Delayed ⏱️':'#ffd700'})
     st.plotly_chart(fig3, use_container_width=True)

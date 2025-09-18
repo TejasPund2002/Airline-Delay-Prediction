@@ -223,20 +223,7 @@ import pandas as pd
 # Check if a prediction was made
 if st.session_state.get("prediction_made"):
     # Build a DataFrame from the last input
-    input_df = pd.DataFrame({
-        "carrier_name": [carrier_name],
-        "airport_origin": [airport_origin],
-        "airport_dest": [airport_dest],
-        "weather_condition": [weather_condition],
-        "traffic_level": [traffic_level],
-        "day_of_week": [days_map[day_of_week]],
-        "month": [month],
-        "hour": [hour],
-        "distance": [distance],
-        "airport_congestion_index": [congestion_index],
-        "predicted_delay": [st.session_state["predicted_delay"]],
-        "predicted_class": [st.session_state["predicted_class"]]
-    })
+    input_df = input_data
 
     st.markdown("""
     <div style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>

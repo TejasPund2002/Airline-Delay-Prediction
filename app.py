@@ -216,29 +216,53 @@ if submitted:
         """, unsafe_allow_html=True)
 
 
-# --- Feature Insights Section ---
+# --- Feature Insights Section (Updated with spacing) ---
 st.markdown("""
-<div class='feature-box' style='background: linear-gradient(135deg, #2c3e50, #34495e); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>
-  <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>📊 Feature Insights</h1>
-  <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
+<div class='feature-box' style='background: linear-gradient(135deg, #2c3e50, #34495e); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 40px;'>
+  <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 25px;'>📊 Feature Insights</h1>
+  <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:30px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Example placeholders for charts / metrics
-col1, col2 = st.columns(2)
+# Two-column layout with spacing
+col1, col2 = st.columns([1,1], gap='large')
 
 with col1:
     st.markdown("""
-    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center;'>
-        <h3 style='color:#00ffe0;'>Carrier Impact</h3>
+    <div style='background:#1b263b; padding:25px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center; margin-bottom:20px;'>
+        <h3 style='color:#00ffe0; margin-bottom:10px;'>Carrier Impact</h3>
         <p style='color:#b0c4de;'>Shows average delays by each airline carrier.</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
     st.markdown("""
-    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center;'>
-        <h3 style='color:#00ffe0;'>Airport Impact</h3>
+    <div style='background:#1b263b; padding:25px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center; margin-bottom:20px;'>
+        <h3 style='color:#00ffe0; margin-bottom:10px;'>Airport Impact</h3>
         <p style='color:#b0c4de;'>Shows how origin and destination airports influence flight delays.</p>
     </div>
     """, unsafe_allow_html=True)
+
+# --- Useful Visuals Section ---
+st.markdown("""
+<div class='visuals-box' style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 40px;'>
+  <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 25px;'>📈 Useful Visuals & Statistics</h1>
+  <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:30px;'>Visual representations of flight delays, distributions, and key statistics to understand patterns in the dataset.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Example placeholder for statistics describe
+st.markdown("""
+<div style='background:#1b263b; padding:25px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); margin-top:20px;'>
+    <h3 style='color:#00ffe0; text-align:center; margin-bottom:15px;'>Dataset Statistical Description</h3>
+    <p style='color:#b0c4de; text-align:center;'>This section will show descriptive statistics like mean, median, min, max, and standard deviation of key numeric features.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Example placeholder for visualizations
+st.markdown("""
+<div style='background:#1b263b; padding:25px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); margin-top:20px;'>
+    <h3 style='color:#00ffe0; text-align:center; margin-bottom:15px;'>Visualizations</h3>
+    <p style='color:#b0c4de; text-align:center;'>Here you can add histograms, bar charts, or line plots to visualize feature distributions and flight delays.</p>
+</div>
+""", unsafe_allow_html=True)

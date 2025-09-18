@@ -214,3 +214,31 @@ if submitted:
                 <h3>Status: <span class="status-highlight">{predicted_class}</span></h3>
             </div>
         """, unsafe_allow_html=True)
+
+
+# --- Feature Insights Section ---
+st.markdown("""
+<div class='feature-box' style='background: linear-gradient(135deg, #2c3e50, #34495e); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>
+  <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>📊 Feature Insights</h1>
+  <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Example placeholders for charts / metrics
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("""
+    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center;'>
+        <h3 style='color:#00ffe0;'>Carrier Impact</h3>
+        <p style='color:#b0c4de;'>Shows average delays by each airline carrier.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center;'>
+        <h3 style='color:#00ffe0;'>Airport Impact</h3>
+        <p style='color:#b0c4de;'>Shows how origin and destination airports influence flight delays.</p>
+    </div>
+    """, unsafe_allow_html=True)

@@ -304,7 +304,7 @@ if submitted:
 st.markdown("""
 <div class='design-box'>
     <h1 style='color:#75e6da; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>🎨 Design and Credits</h1>
-    <p style='color:#d0d0d0; text-align:center; font-size:14px;'>This app uses a clean, modern design. The theme is based on the Dark Ocean Blue gradient.</p>
+    <p style='color:#d0d0d0; text-align:center; font-size:14px;'>App Designed & Developed by Tejas Pund</p>
     <div style='text-align:center; margin-top:10px;'>
         <p style='color:#b0c4de;'><strong>Libraries:</strong> Streamlit, Scikit-learn, Pandas, Joblib, Plotly</p>
         <p style='color:#b0c4de;'><strong>Icons:</strong> Emojis ✈️ 🔮 ⏱️</p>

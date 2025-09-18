@@ -108,9 +108,24 @@ def load_resources():
 rf_model, scaler, feature_columns = load_resources()
 
 # --- Input + Prediction Section (Redesigned) ---
-st.markdown('<div class="form-box" style="background: linear-gradient(135deg, #1f2c34, #3a4a58); padding:30px; border-radius:20px; box-shadow: 0px 8px 25px rgba(0,0,0,0.7);">', unsafe_allow_html=True)
-st.markdown('<h1 class="form-title" style="font-size:28px; text-align:center; color:#00ffe0; margin-bottom:10px; font-family:'Arial Black', sans-serif;">Flight Delay Predictor</h1>', unsafe_allow_html=True)
-st.markdown('<p class="form-subtitle" style="text-align:center; font-size:16px; color:#d0d0d0; margin-bottom:25px;">Enter flight details to predict potential delays using a powerful machine learning model.</p>', unsafe_allow_html=True)
+st.markdown("""
+<div class="form-box" style="background: linear-gradient(135deg, #1f2c34, #3a4a58); padding:30px; border-radius:20px; box-shadow: 0px 8px 25px rgba(0,0,0,0.7);">
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<h1 class="form-title" style="font-size:28px; text-align:center; color:#00ffe0; margin-bottom:10px; font-family: 'Arial Black', sans-serif;">
+Flight Delay Predictor
+</h1>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<p class="form-subtitle" style="text-align:center; font-size:16px; color:#d0d0d0; margin-bottom:25px;">
+Enter flight details to predict potential delays using a powerful machine learning model.
+</p>
+""", unsafe_allow_html=True)
+
+
 
 # Day mapping (UI shows names, model gets numbers)
 days_map = {

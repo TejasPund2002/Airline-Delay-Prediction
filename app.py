@@ -86,7 +86,7 @@ st.markdown("""
 # --- Introduction Section ---
 st.markdown("""
     <div class="intro-box">
-        ✈️ Welcome to the <b>Airline Delay Prediction App</b>! <br><br>
+        ✈Welcome to the <b>Airline Delay Prediction App</b>! <br><br>
         This application helps you <b>predict flight delays</b> based on multiple real-world factors 
         such as <b>weather, traffic, distance, congestion</b> and more.  
         <br><br>
@@ -96,7 +96,6 @@ st.markdown("""
         - Enter custom flight information  
         - Get predictions for <b>arrival delay (minutes)</b> and <b>delay class</b>  
         <br>
-        👉 Use the sidebar to navigate and explore different sections.
     </div>
 """, unsafe_allow_html=True)
 
@@ -110,7 +109,7 @@ feature_columns = joblib.load("feature_columns.pkl")
 
 # --- Input + Prediction Section ---
 st.markdown('<div class="form-box">', unsafe_allow_html=True)
-st.markdown('<div class="form-title">✈️ Enter Flight Details</div>', unsafe_allow_html=True)
+st.markdown('<div class="form-title">✈ Enter Flight Details</div>', unsafe_allow_html=True)
 
 # Day mapping (UI shows names, model gets numbers)
 days_map = {

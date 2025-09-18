@@ -216,53 +216,77 @@ if submitted:
         """, unsafe_allow_html=True)
 
 
-# --- Feature Insights Section ---
-st.markdown("""
-<div class='feature-box' style='background: linear-gradient(135deg, #2c3e50, #34495e); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>
-    <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 15px;'>📊 Feature Insights</h1>
-    <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:20px;'>Explore how different flight features impact delays and the importance of each factor in the prediction model.</p>
-</div>
-""", unsafe_allow_html=True)
+# --- Feature Insights & Visuals Based on User Input ---
+import plotly.express as px
 
-# Example placeholders for charts / metrics
-col1, col2 = st.columns(2)
+# Initialize session state to store multiple inputs for visualization
+if 'user_inputs' not in st.session_state:
+    st.session_state['user_inputs'] = pd.DataFrame(columns=[
+        'carrier_name','airport_origin','airport_dest','weather_condition','traffic_level',
+        'day_of_week','month','hour','distance','airport_congestion_index','predicted_delay','predicted_class'
+    ])
 
-with col1:
+# Append current input if prediction was made
+if st.session_state.get('prediction_made'):
+    new_row = pd.DataFrame({
+        'carrier_name': [carrier_name],
+        'airport_origin': [airport_origin],
+        'airport_dest': [airport_dest],
+        'weather_condition': [weather_condition],
+        'traffic_level': [traffic_level],
+        'day_of_week': [days_map[day_of_week]],
+        'month': [month],
+        'hour': [hour],
+        'distance': [distance],
+        'airport_congestion_index': [congestion_index],
+        'predicted_delay': [round(predicted_delay, 2)],
+        'predicted_class': [predicted_class]
+    })
+    st.session_state['user_inputs'] = pd.concat([st.session_state['user_inputs'], new_row], ignore_index=True)
+
+user_df = st.session_state['user_inputs']
+
+if not user_df.empty:
     st.markdown("""
-    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center;'>
-        <h3 style='color:#00ffe0;'>Carrier Impact</h3>
-        <p style='color:#b0c4de;'>Shows average delays by each airline carrier.</p>
+    <div style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 30px;'>
+        <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif;'>📊 Feature Insights & Visuals</h1>
+        <p style='color:#d0d0d0; text-align:center;'>Statistics and visualizations generated dynamically from the inputs you have provided.</p>
     </div>
     """, unsafe_allow_html=True)
 
-with col2:
+    # --- Statistical Description ---
     st.markdown("""
-    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); text-align:center;'>
-        <h3 style='color:#00ffe0;'>Airport Impact</h3>
-        <p style='color:#b0c4de;'>Shows how origin and destination airports influence flight delays.</p>
+    <div style='background:#1b263b; padding:20px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); margin-top:20px;'>
+        <h3 style='color:#00ffe0; text-align:center;'>Statistical Summary of Input Features</h3>
     </div>
     """, unsafe_allow_html=True)
+    st.dataframe(user_df.describe().T.style.format('{:.2f}'))
 
-# --- Useful Visuals Section ---
-st.markdown("""
-<div class='visuals-box' style='background: linear-gradient(135deg, #1a2a3a, #263d50); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-top: 40px;'>
-  <h1 style='color:#00ffe0; text-align:center; font-family: Arial Black, sans-serif; margin-bottom: 25px;'>📈 Useful Visuals & Statistics</h1>
-  <p style='color:#d0d0d0; text-align:center; font-size:16px; margin-bottom:30px;'>Visual representations of flight delays, distributions, and key statistics to understand patterns in the dataset.</p>
-</div>
-""", unsafe_allow_html=True)
+    # --- Carrier Impact ---
+    st.markdown("""
+    <div style='margin-top:25px;'>
+        <h3 style='color:#00ffe0; text-align:center;'>Average Predicted Delay by Carrier</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    carrier_chart = user_df.groupby('carrier_name')['predicted_delay'].mean().reset_index()
+    fig1 = px.bar(carrier_chart, x='carrier_name', y='predicted_delay', color='predicted_delay', color_continuous_scale='Viridis', title='Carrier Delay Impact')
+    st.plotly_chart(fig1, use_container_width=True)
 
-# Example placeholder for statistics describe
-st.markdown("""
-<div style='background:#1b263b; padding:25px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); margin-top:20px;'>
-    <h3 style='color:#00ffe0; text-align:center; margin-bottom:15px;'>Dataset Statistical Description</h3>
-    <p style='color:#b0c4de; text-align:center;'>This section will show descriptive statistics like mean, median, min, max, and standard deviation of key numeric features.</p>
-</div>
-""", unsafe_allow_html=True)
+    # --- Airport Origin Impact ---
+    st.markdown("""
+    <div style='margin-top:25px;'>
+        <h3 style='color:#00ffe0; text-align:center;'>Average Predicted Delay by Origin Airport</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    origin_chart = user_df.groupby('airport_origin')['predicted_delay'].mean().reset_index()
+    fig2 = px.bar(origin_chart, x='airport_origin', y='predicted_delay', color='predicted_delay', color_continuous_scale='Cividis', title='Origin Airport Delay Impact')
+    st.plotly_chart(fig2, use_container_width=True)
 
-# Example placeholder for visualizations
-st.markdown("""
-<div style='background:#1b263b; padding:25px; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.5); margin-top:20px;'>
-    <h3 style='color:#00ffe0; text-align:center; margin-bottom:15px;'>Visualizations</h3>
-    <p style='color:#b0c4de; text-align:center;'>Here you can add histograms, bar charts, or line plots to visualize feature distributions and flight delays.</p>
-</div>
-""", unsafe_allow_html=True)
+    # --- Delay Distribution Histogram ---
+    st.markdown("""
+    <div style='margin-top:25px;'>
+        <h3 style='color:#00ffe0; text-align:center;'>Predicted Delay Distribution</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    fig3 = px.histogram(user_df, x='predicted_delay', nbins=20, color='predicted_class', title='Predicted Delay Distribution', color_discrete_map={'On-Time ✈️':'#00ffcc','Delayed ⏱️':'#ffd700'})
+    st.plotly_chart(fig3, use_container_width=True)
